@@ -203,7 +203,7 @@
             <!-- Configuration Section -->
             <div class="test-section">
                 <h2>⚙️ API Configuration</h2>
-                <p>Configure your Canva Connect API settings for testing.</p>
+                <p>Configure your Canva Connect API settings for testing. Make sure your redirect URL exactly matches what's configured in your Canva app.</p>
                 
                 <div class="input-group">
                     <label for="apiKey">Client ID:</label>
@@ -212,7 +212,7 @@
                 
                 <div class="input-group">
                     <label for="redirectUrl">Redirect URL:</label>
-                    <input type="url" id="redirectUrl" placeholder="https://yoursite.com/canva-return">
+                    <input type="url" id="redirectUrl" placeholder="https://stupendous-cactus-6aad7c.netlify.app">
                 </div>
                 
                 <div class="input-group">
@@ -225,6 +225,15 @@
                         <option value="business-card">Business Card</option>
                         <option value="custom">Custom</option>
                     </select>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <strong>⚠️ Important:</strong> Your redirect URL must be exactly configured in your Canva Connect app settings. Common issues:
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>URL must match exactly (including http/https)</li>
+                        <li>No trailing slashes if not configured</li>
+                        <li>Client ID must be valid and active</li>
+                    </ul>
                 </div>
             </div>
 
@@ -306,6 +315,19 @@
                 logMessage('Error: API key is required', 'warning');
                 return;
             }
+            
+            if (!apiConfig.redirectUrl) {
+                logMessage('Error: Redirect URL is required', 'warning');
+                return;
+            }
+            
+            // Validate URL format
+            try {
+                new URL(apiConfig.redirectUrl);
+            } catch (e) {
+                logMessage('Error: Invalid redirect URL format', 'warning');
+                return;
+            }
 
             // Real Canva Connect API call
             logMessage('Initiating "Edit in Canva" flow...', 'info');
@@ -314,6 +336,8 @@
             const canvaUrl = generateCanvaUrl();
             
             logMessage(`Generated Canva edit URL: ${canvaUrl}`, 'info');
+            logMessage(`Client ID: ${apiConfig.apiKey}`, 'info');
+            logMessage(`Redirect URL: ${apiConfig.redirectUrl}`, 'info');
             logMessage('Redirecting to Canva in 2 seconds...', 'info');
             
             // Store the session for when user returns
@@ -429,9 +453,9 @@
             const baseUrl = 'https://www.canva.com/api/oauth/authorize';
             const params = new URLSearchParams({
                 client_id: apiConfig.apiKey,
-                redirect_uri: apiConfig.redirectUrl,
+                redirect_uri: encodeURIComponent(apiConfig.redirectUrl),
                 response_type: 'code',
-                scope: 'design:read design:write',
+                scope: 'design:content:read design:content:write',
                 state: generateSessionId()
             });
 
