@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canva Connect API Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00d4ff 0%, #090979 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .test-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .test-section:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .test-section h2 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .test-section p {
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .status-display {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .status-display h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .status-display pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #e6f3ff;
+            border: 1px solid #b3d9ff;
+            color: #0066cc;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+
+        .alert-warning {
+            background: #fffbf0;
+            border: 1px solid #f6e05e;
+            color: #744210;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Canva Connect API Tester</h1>
+            <p>Test your Canva Connect integration with ease</p>
+        </div>
+        
+        <div class="content">
+            <!-- Configuration Section -->
+            <div class="test-section">
+                <h2>⚙️ API Configuration</h2>
+                <p>Configure your Canva Connect API settings for testing.</p>
+                
+                <div class="input-group">
+                    <label for="apiKey">API Key:</label>
+                    <input type="password" id="apiKey" placeholder="Enter your Canva API key">
+                </div>
+                
+                <div class="input-group">
+                    <label for="redirectUrl">Redirect URL:</label>
+                    <input type="url" id="redirectUrl" value="https://yoursite.com/canva-return" placeholder="https://yoursite.com/canva-return">
+                </div>
+                
+                <div class="input-group">
+                    <label for="designType">Design Type:</label>
+                    <select id="designType">
+                        <option value="presentation">Presentation</option>
+                        <option value="poster">Poster</option>
+                        <option value="social-media-post">Social Media Post</option>
+                        <option value="logo">Logo</option>
+                        <option value="business-card">Business Card</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Edit in Canva Section -->
+            <div class="test-section">
+                <h2>🚀 Edit in Canva</h2>
+                <p>Test the "Edit in Canva" functionality by redirecting to Canva's editor.</p>
+                
+                <div class="button-group">
+                    <button class="btn" onclick="editInCanva()">
+                        ✨ Edit New Design in Canva
+                    </button>
+                    <button class="btn btn-secondary" onclick="editExistingDesign()">
+                        📝 Edit Existing Design
+                    </button>
+                </div>
+                
+                <div class="input-group" style="margin-top: 20px;">
+                    <label for="existingDesignId">Existing Design ID (optional):</label>
+                    <input type="text" id="existingDesignId" placeholder="Enter Canva design ID">
+                </div>
+            </div>
+
+            <!-- Return Handler Section -->
+            <div class="test-section">
+                <h2>🔄 Return from Canva</h2>
+                <p>This section simulates what happens when users return from Canva to your site.</p>
+                
+                <div class="button-group">
+                    <button class="btn btn-info" onclick="simulateReturn()">
+                        🔍 Simulate Canva Return
+                    </button>
+                    <button class="btn btn-secondary" onclick="checkUrlParams()">
+                        📊 Check URL Parameters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Status Display -->
+            <div class="status-display">
+                <h3>📋 Test Status & Logs</h3>
+                <div id="statusLog">
+                    <div class="alert alert-info">
+                        Ready to test! Configure your API settings above and click "Edit in Canva" to begin.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables to store test state
+        let testResults = {};
+        let apiConfig = {};
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUrlParams();
+            logMessage('Application initialized', 'info');
+        });
+
+        // Update API configuration
+        function updateConfig() {
+            apiConfig = {
+                apiKey: document.getElementById('apiKey').value,
+                redirectUrl: document.getElementById('redirectUrl').value,
+                designType: document.getElementById('designType').value
+            };
+            logMessage('API configuration updated', 'success');
+        }
+
+        // Edit in Canva - New Design
+        function editInCanva() {
+            updateConfig();
+            
+            if (!apiConfig.apiKey) {
+                logMessage('Error: API key is required', 'warning');
+                return;
+            }
+
+            // Simulate the Canva Connect API call
+            logMessage('Initiating "Edit in Canva" flow...', 'info');
+            
+            // In a real implementation, you would make an API call to Canva here
+            // This simulates the redirect URL that Canva would provide
+            const mockCanvaUrl = generateMockCanvaUrl();
+            
+            logMessage(`Generated Canva edit URL: ${mockCanvaUrl}`, 'info');
+            logMessage('Redirecting to Canva... (In real implementation, this would redirect)', 'info');
+            
+            // Store the session for when user returns
+            sessionStorage.setItem('canvaSession', JSON.stringify({
+                designType: apiConfig.designType,
+                timestamp: new Date().toISOString(),
+                sessionId: generateSessionId()
+            }));
+
+            // In a real app, you would do: window.location.href = mockCanvaUrl;
+            // For testing, we'll just log it
+            setTimeout(() => {
+                logMessage('User would now be editing in Canva...', 'info');
+            }, 1000);
+        }
+
+        // Edit existing design in Canva
+        function editExistingDesign() {
+            const designId = document.getElementById('existingDesignId').value;
+            
+            if (!designId) {
+                logMessage('Error: Design ID is required for editing existing designs', 'warning');
+                return;
+            }
+
+            updateConfig();
+            
+            if (!apiConfig.apiKey) {
+                logMessage('Error: API key is required', 'warning');
+                return;
+            }
+
+            logMessage(`Initiating edit for existing design: ${designId}`, 'info');
+            
+            const mockCanvaUrl = generateMockCanvaUrl(designId);
+            logMessage(`Generated Canva edit URL: ${mockCanvaUrl}`, 'info');
+            logMessage('Redirecting to Canva... (In real implementation, this would redirect)', 'info');
+        }
+
+        // Simulate return from Canva
+        function simulateReturn() {
+            const mockReturnParams = {
+                design_id: 'DABnBOacrb4',
+                user_id: 'user123',
+                state: 'completed',
+                timestamp: new Date().toISOString()
+            };
+
+            // Update URL with mock parameters
+            const currentUrl = new URL(window.location);
+            Object.keys(mockReturnParams).forEach(key => {
+                currentUrl.searchParams.set(key, mockReturnParams[key]);
+            });
+            
+            window.history.replaceState({}, '', currentUrl);
+            
+            logMessage('Simulated return from Canva with parameters', 'success');
+            checkUrlParams();
+        }
+
+        // Check URL parameters (handles actual returns)
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const params = {};
+            
+            for (const [key, value] of urlParams) {
+                params[key] = value;
+            }
+
+            if (Object.keys(params).length > 0) {
+                logMessage('Detected URL parameters from Canva return:', 'success');
+                logMessage(JSON.stringify(params, null, 2), 'info', true);
+                
+                // Check for common Canva return parameters
+                if (params.design_id) {
+                    logMessage(`✅ Design ID received: ${params.design_id}`, 'success');
+                }
+                if (params.state) {
+                    logMessage(`✅ State: ${params.state}`, 'success');
+                }
+                if (params.user_id) {
+                    logMessage(`✅ User ID: ${params.user_id}`, 'success');
+                }
+
+                // Check session data
+                const sessionData = sessionStorage.getItem('canvaSession');
+                if (sessionData) {
+                    logMessage('Session data found:', 'info');
+                    logMessage(sessionData, 'info', true);
+                }
+            } else {
+                logMessage('No URL parameters detected', 'info');
+            }
+        }
+
+        // Utility functions
+        function generateMockCanvaUrl(designId = null) {
+            const baseUrl = 'https://www.canva.com/api/oauth/authorize';
+            const params = new URLSearchParams({
+                client_id: 'your_client_id',
+                redirect_uri: apiConfig.redirectUrl,
+                response_type: 'code',
+                scope: 'design:write',
+                state: generateSessionId()
+            });
+
+            if (designId) {
+                params.append('design_id', designId);
+            }
+
+            return `${baseUrl}?${params.toString()}`;
+        }
+
+        function generateSessionId() {
+            return 'sess_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function logMessage(message, type = 'info', isCode = false) {
+            const statusLog = document.getElementById('statusLog');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `alert alert-${type} fade-in`;
+            
+            if (isCode) {
+                logEntry.innerHTML = `
+                    <strong>[${timestamp}]</strong><br>
+                    <pre>${message}</pre>
+                `;
+            } else {
+                logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            }
+            
+            statusLog.appendChild(logEntry);
+            statusLog.scrollTop = statusLog.scrollHeight;
+
+            // Keep only last 10 log entries
+            while (statusLog.children.length > 10) {
+                statusLog.removeChild(statusLog.firstChild);
+            }
+        }
+
+        // Listen for input changes to auto-update config
+        ['apiKey', 'redirectUrl', 'designType'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateConfig);
+        });
+    </script>
+</body>
+</html>
