@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "build": "mkdir -p dist && cp index.html dist/",
     "dev": "npx serve . -p 5173",
     "preview": "npx serve . -p 4173"
   },
