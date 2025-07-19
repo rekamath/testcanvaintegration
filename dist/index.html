@@ -425,22 +425,18 @@
 
         // Utility functions
         function generateCanvaUrl(designId = null) {
-            // Use the real Canva Connect URL structure
-            const baseUrl = 'https://www.canva.com/api/connect/authorize';
+            // Use the correct Canva Connect authorization URL
+            const baseUrl = 'https://www.canva.com/api/oauth/authorize';
             const params = new URLSearchParams({
-                client_id: apiConfig.apiKey, // Using API key as client_id for now
+                client_id: apiConfig.apiKey,
                 redirect_uri: apiConfig.redirectUrl,
                 response_type: 'code',
-                scope: 'design:content:write design:meta:read',
+                scope: 'design:read design:write',
                 state: generateSessionId()
             });
 
             if (designId) {
                 params.append('design_id', designId);
-            }
-            
-            if (apiConfig.designType && apiConfig.designType !== 'custom') {
-                params.append('design_type', apiConfig.designType);
             }
 
             return `${baseUrl}?${params.toString()}`;
