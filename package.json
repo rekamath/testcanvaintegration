@@ -1,0 +1,12 @@
+{
+  "name": "canva-connect-tester",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve . -p 5173",
+    "preview": "npx serve . -p 4173"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
