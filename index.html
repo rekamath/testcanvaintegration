@@ -303,7 +303,7 @@
             updateConfig();
             
             if (!apiConfig.apiKey) {
-                logMessage('Error: Client ID is required', 'warning');
+                logMessage('Error: API key is required', 'warning');
                 return;
             }
 
@@ -342,7 +342,7 @@
             updateConfig();
             
             if (!apiConfig.apiKey) {
-                logMessage('Error: Client ID is required', 'warning');
+                logMessage('Error: API key is required', 'warning');
                 return;
             }
 
@@ -478,6 +478,7 @@
         // Listen for input changes to auto-update config
         ['apiKey', 'redirectUrl', 'designType'].forEach(id => {
             document.getElementById(id).addEventListener('input', updateConfig);
+            document.getElementById(id).addEventListener('change', updateConfig);
         });
     </script>
 </body>

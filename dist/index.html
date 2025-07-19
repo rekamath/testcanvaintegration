@@ -206,13 +206,13 @@
                 <p>Configure your Canva Connect API settings for testing.</p>
                 
                 <div class="input-group">
-                    <label for="apiKey">API Key:</label>
-                    <input type="password" id="apiKey" placeholder="Enter your Canva API key">
+                    <label for="apiKey">Client ID:</label>
+                    <input type="text" id="apiKey" placeholder="Enter your Canva Connect Client ID">
                 </div>
                 
                 <div class="input-group">
                     <label for="redirectUrl">Redirect URL:</label>
-                    <input type="url" id="redirectUrl" value="https://yoursite.com/canva-return" placeholder="https://yoursite.com/canva-return">
+                    <input type="url" id="redirectUrl" placeholder="https://yoursite.com/canva-return">
                 </div>
                 
                 <div class="input-group">
@@ -289,11 +289,13 @@
         // Update API configuration
         function updateConfig() {
             apiConfig = {
-                apiKey: document.getElementById('apiKey').value,
+                apiKey: document.getElementById('apiKey').value, // This is actually the client_id
                 redirectUrl: document.getElementById('redirectUrl').value,
                 designType: document.getElementById('designType').value
             };
-            logMessage('API configuration updated', 'success');
+            if (apiConfig.apiKey && apiConfig.redirectUrl) {
+                logMessage('API configuration updated', 'success');
+            }
         }
 
         // Edit in Canva - New Design
@@ -305,15 +307,14 @@
                 return;
             }
 
-            // Simulate the Canva Connect API call
+            // Real Canva Connect API call
             logMessage('Initiating "Edit in Canva" flow...', 'info');
             
-            // In a real implementation, you would make an API call to Canva here
-            // This simulates the redirect URL that Canva would provide
-            const mockCanvaUrl = generateMockCanvaUrl();
+            // Generate real Canva Connect URL
+            const canvaUrl = generateCanvaUrl();
             
-            logMessage(`Generated Canva edit URL: ${mockCanvaUrl}`, 'info');
-            logMessage('Redirecting to Canva... (In real implementation, this would redirect)', 'info');
+            logMessage(`Generated Canva edit URL: ${canvaUrl}`, 'info');
+            logMessage('Redirecting to Canva in 2 seconds...', 'info');
             
             // Store the session for when user returns
             sessionStorage.setItem('canvaSession', JSON.stringify({
@@ -322,11 +323,11 @@
                 sessionId: generateSessionId()
             }));
 
-            // In a real app, you would do: window.location.href = mockCanvaUrl;
-            // For testing, we'll just log it
+            // Actual redirect to Canva
             setTimeout(() => {
-                logMessage('User would now be editing in Canva...', 'info');
-            }, 1000);
+                logMessage('Redirecting now...', 'success');
+                window.location.href = canvaUrl;
+            }, 2000);
         }
 
         // Edit existing design in Canva
@@ -347,9 +348,23 @@
 
             logMessage(`Initiating edit for existing design: ${designId}`, 'info');
             
-            const mockCanvaUrl = generateMockCanvaUrl(designId);
-            logMessage(`Generated Canva edit URL: ${mockCanvaUrl}`, 'info');
-            logMessage('Redirecting to Canva... (In real implementation, this would redirect)', 'info');
+            const canvaUrl = generateCanvaUrl(designId);
+            logMessage(`Generated Canva edit URL: ${canvaUrl}`, 'info');
+            logMessage('Redirecting to Canva in 2 seconds...', 'info');
+            
+            // Store the session for when user returns
+            sessionStorage.setItem('canvaSession', JSON.stringify({
+                designType: apiConfig.designType,
+                designId: designId,
+                timestamp: new Date().toISOString(),
+                sessionId: generateSessionId()
+            }));
+
+            // Actual redirect to Canva
+            setTimeout(() => {
+                logMessage('Redirecting now...', 'success');
+                window.location.href = canvaUrl;
+            }, 2000);
         }
 
         // Simulate return from Canva
@@ -409,18 +424,23 @@
         }
 
         // Utility functions
-        function generateMockCanvaUrl(designId = null) {
-            const baseUrl = 'https://www.canva.com/api/oauth/authorize';
+        function generateCanvaUrl(designId = null) {
+            // Use the real Canva Connect URL structure
+            const baseUrl = 'https://www.canva.com/api/connect/authorize';
             const params = new URLSearchParams({
-                client_id: 'your_client_id',
+                client_id: apiConfig.apiKey, // Using API key as client_id for now
                 redirect_uri: apiConfig.redirectUrl,
                 response_type: 'code',
-                scope: 'design:write',
+                scope: 'design:content:write design:meta:read',
                 state: generateSessionId()
             });
 
             if (designId) {
                 params.append('design_id', designId);
+            }
+            
+            if (apiConfig.designType && apiConfig.designType !== 'custom') {
+                params.append('design_type', apiConfig.designType);
             }
 
             return `${baseUrl}?${params.toString()}`;
@@ -458,6 +478,7 @@
         // Listen for input changes to auto-update config
         ['apiKey', 'redirectUrl', 'designType'].forEach(id => {
             document.getElementById(id).addEventListener('input', updateConfig);
+            document.getElementById(id).addEventListener('change', updateConfig);
         });
     </script>
 </body>
